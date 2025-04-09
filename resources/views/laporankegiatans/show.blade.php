@@ -24,16 +24,13 @@
     <div class="container-fluid">
         <div class="card card-primary card-outline">
             <div class="card-body">
-                <div class="mb-3">
-                    <label for="nama_titik" class="form-label">Nama Titik Reklame</label>
-                    <input
-                        type="text"
-                        id="nama_titik"
-                        class="form-control"
-                        value="{{ $laporankegiatan->titikReklame ? $laporankegiatan->titikReklame->nama_titik : 'Tidak ada data titik reklame' }}"
-                        readonly
-                    >
-                </div>
+            <div class="mb-3">
+                <label for="nama_titik" class="form-label">Nama Titik Reklame</label>
+            @php
+            $titikReklame = $titikReklames->firstWhere('koordinat_titik', $laporankegiatan->koordinat_titik);
+            @endphp
+            <input type="text" id="nama_titik" class="form-control" value="{{ $titikReklame->nama_titik }}" readonly>
+            </div>
 
                 <div class="mb-3">
                     <label for="jenis_kegiatan" class="form-label">Jenis Kegiatan</label>

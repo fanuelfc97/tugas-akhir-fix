@@ -30,9 +30,9 @@
             <!-- Nama Titik Reklame -->
             <div class="mb-3">
                 <label for="nama_titik" class="form-label">Nama Titik Reklame</label>
-            php
+            @php
             $titikReklame = $titikReklames->firstWhere('koordinat_titik', $ipr->koordinat_titik);
-            endphp
+            @endphp
             <input type="text" id="nama_titik" class="form-control" value="{{ $titikReklame->nama_titik }}" readonly>
             </div>
 

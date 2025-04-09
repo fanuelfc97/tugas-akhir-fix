@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\LaporanKegiatan;
 use App\Models\Pegawai;
+use Illuminate\Support\Facades\Log; 
 use App\Models\TitikReklame;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use PDF;
 
@@ -69,18 +71,39 @@ class LaporanKegiatanController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(LaporanKegiatan $laporankegiatan)
+    public function show($no_laporan_url, LaporanKegiatan $laporanKegiatan)
     {
-        $titikReklames = TitikReklame::all();
-        $pegawais = Pegawai::all();
-        return view('laporankegiatans.show', compact('laporankegiatan', 'titikReklames', 'pegawais'));
+        // Convert the URL format to the database format
+        $no_laporan = substr($no_laporan_url, 0, 3) . '/' . 
+                      substr($no_laporan_url, 3, 4) . '/' . 
+                      substr($no_laporan_url, 7, 2) . '/' . 
+                      substr($no_laporan_url, 9, 3);
+                      $titikReklames = TitikReklame::all();
+                      $pegawais = Pegawai::all();
+
+        $laporankegiatan = LaporanKegiatan::findOrFail($no_laporan);
+        $laporankegiatan->load('titikReklame', 'pegawai');
+        return view('laporankegiatans.show', compact('laporankegiatan', 'laporanKegiatan','titikReklames','pegawais'));
     }
 
     public function generateReport(Request $request)
     {
-        $laporanKegiatans = LaporanKegiatan::all(); // Ambil semua data laporan kegiatan
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $laporanKegiatans = LaporanKegiatan::with('pegawai', 'titikReklame');  
+        
+        if ($startDate && $endDate) {
+            $startDate = Carbon::parse($startDate);
+            $endDate = Carbon::parse($endDate)->endOfDay(); 
+            $laporanKegiatans->whereBetween('tanggal_kegiatan', [$startDate, $endDate]);
+        }
+    
 
-        $pdf = PDF::loadView('laporankegiatans.report', compact('laporanKegiatans'));
+        $pegawais = Pegawai::all();
+        $titikReklames = TitikReklame::all();
+        $laporankegiatan = $laporanKegiatans->get();
+
+        $pdf = PDF::loadView('laporankegiatans.report', compact('laporankegiatan','pegawais','titikReklames'));
         return $pdf->download('laporan_kegiatan_report.pdf');
     }
 

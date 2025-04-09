@@ -25,20 +25,24 @@
     <thead>
         <tr>
             <th>No</th>
-            <th>ID Pegawai</th>
+            <th>Nomor Laporan</th>
+            <th>Nama Pegawai</th>
+            <th>Lokasi</th>
             <th>Tanggal Kegiatan</th>
+            <th>Jenis Kegiatan</th>
             <th>Uraian Kegiatan</th>
-            <th>Hasil Kegiatan</th>
         </tr>
     </thead>
     <tbody>
-        @foreach ($laporanKegiatans as $index => $laporan)
+        @foreach ($laporankegiatans as $index => $laporan)
             <tr>
                 <td>{{ $index + 1 }}</td>
-                <td>{{ $laporan->id_pegawai }}</td>
-                <td>{{ $laporan->tgl_kegiatan }}</td>
-                <td>{{ $laporan->uraian_kegiatan }}</td>
-                <td>{{ $laporan->hasil_kegiatan }}</td>
+                <td>{{ $laporan->no_laporan }}</td>
+                <td>{{ $laporan->pegawai->nama_pegawai }}</td> 
+                <td>{{ $laporan->titikreklame->nama_titik }}</td> 
+                <td>{{ $laporan->tanggal_kegiatan }}</td>
+                <td>{{ $laporan->jenis_kegiatan }}</td>
+                <td>{{ $laporan->laporan }}</td>
             </tr>
         @endforeach
     </tbody>

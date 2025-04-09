@@ -52,5 +52,5 @@ Route::resource('imbs', ImbController::class);
 Route::resource('bankgaransis', BankGaransiController::class);
 Route::resource('sewalahans', SewaLahanController::class);
 Route::resource('asuransis', AsuransiController::class);
-Route::get('/laporankegiatans/{laporankegiatan}', [LaporanKegiatanController::class, 'show'])->name('laporankegiatans.show');
 Route::resource('titikreklames', TitikReklameController::class);
+Route::get('/about', function () {return view('about');})->name('about');

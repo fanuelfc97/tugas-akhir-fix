@@ -42,11 +42,38 @@
                 @endif
 
                 <!-- Button to create new report -->
-                if (Auth::user()->jabatan == 'Manager Operasional')
-                <div class="d-flex mb-3"> 
-                    <a href="{{ route('laporankegiatans.create') }}" class="btn btn-primary mb-3">Tambah Laporan Kegiatan</a>
-                    <a href="{{ route('laporankegiatans.generateReport') }}" class="btn btn-secondary mb-3">Generate Report</a>
+                @if (Auth::user()->jabatan == 'Manager Operasional')
+                    <a href="{{ route('laporankegiatans.create') }}" class="btn btn-primary mb-2">Tambah Laporan Kegiatan</a>
+                    <a href="#" class="btn btn-secondary mb-2" data-toggle="modal" data-target="#filterModal">Generate Report</a>
+
+<div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="filterModalLabel">Filter Laporan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('laporankegiatans.generateReport') }}" method="GET">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="start_date" class="form-label">Tanggal Awal:</label> 
+                        <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}"> 
+                    </div>
+                    <div class="mb-3">
+                        <label for="end_date" class="form-label">Tanggal Akhir:</label> 
+                        <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}"> 
+                    </div>
                 </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-hidden="true">Tutup</button>
+                    <button type="submit" class="btn btn-primary">Generate Report</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
                 @endif
                 
 
@@ -94,7 +121,7 @@
                                             <td>{{ $laporan->id_pegawai }}</td>
                                             <td>
                                                 <!-- Detail button -->
-                                                <a href="{{ route('laporankegiatans.show', $laporan) }}" class="btn btn-info btn-sm">Detail</a>
+                                                <a href="{{ route('laporankegiatans.show', str_replace('/', '', $laporan->no_laporan)) }}" class="btn btn-info btn-sm">Detail</a>
                                             </td>
                                         </tr>
                                     @empty
